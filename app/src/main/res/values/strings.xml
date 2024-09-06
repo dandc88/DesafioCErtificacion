@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Weather App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="weather_icon">weather icon\n</string>
+    <string name="cities">Cities</string>
+    <string name="settings">Settings</string>
+    <string name="back">back</string>
+    <string name="select_temp_unit">Select temperature unit</string>
+    <string name="celsius">Celcius</string>
+    <string name="fahrenheit">Fahrenheit</string>
+    <string name="select_wind_speed_unit">Select wind speed unit</string>
+    <string name="mps">m/s (Meter per seconds)</string>
+    <string name="mph">mph (Miles per hour)</string>
+    <string name="city_background_desc">Imagen de la ciudad</string>
+    <string name="map_icon_desc">icono de mapa</string>
+    <string name="weather_icon_desc">Icono estado del tiempo</string>
+</resources>

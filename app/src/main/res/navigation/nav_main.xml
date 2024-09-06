@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/weatherListFragment">
+
+    <fragment
+        android:id="@+id/weatherListFragment"
+        android:name="com.desafiocertificacion.weatherapp.ui.WeatherListFragment"
+        android:label="fragment_weather_list"
+        tools:layout="@layout/fragment_weather_list" >
+        <action
+            android:id="@+id/action_weatherListFragment_to_weatherDetailFragment"
+            app:destination="@id/weatherDetailFragment" />
+        <action
+            android:id="@+id/action_weatherListFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <!-- Agregar argumento cityId al WeatherDetailFragment -->
+    <fragment
+        android:id="@+id/weatherDetailFragment"
+        android:name="com.desafiocertificacion.weatherapp.ui.WeatherDetailFragment"
+        android:label="fragment_weather_detail"
+        tools:layout="@layout/fragment_weather_detail" >
+        <argument
+            android:name="cityId"
+            app:argType="integer" /> <!-- Tipo integer para el ID de la ciudad -->
+        <action
+            android:id="@+id/action_weatherDetailFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.desafiocertificacion.weatherapp.ui.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+</navigation>
