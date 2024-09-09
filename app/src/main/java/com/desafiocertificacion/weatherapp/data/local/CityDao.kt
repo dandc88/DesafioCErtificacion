@@ -17,4 +17,6 @@ interface CityDao {
 
     @Query("DELETE FROM city")
     fun deleteAllCities(): Int
+
+
 }

@@ -59,6 +59,8 @@ dependencies {
     // Room
     implementation libs.androidx.room.runtime
     implementation libs.androidx.room.ktx
+    implementation libs.androidx.navigation.testing
+    implementation libs.core.ktx
 
     kapt "androidx.room:room-compiler:2.6.1"
 
@@ -74,8 +76,43 @@ dependencies {
 
 
     // Testing
-    testImplementation libs.junit
+
     androidTestImplementation libs.androidx.junit.v115
     androidTestImplementation libs.androidx.espresso.core.v351
+
+
+    implementation libs.kotlinx.coroutines.android
+    testImplementation libs.junit
+    testImplementation libs.androidx.runner
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.kotlinx.coroutines.core
+
+    testImplementation libs.turbine
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.kotlinx.coroutines.test
+
+    // Dependencia principal de OkHttp
+    implementation libs.okhttp
+    implementation libs.logging.interceptor
+
+    // Dependencia para MockWebServer
+    testImplementation libs.mockwebserver
+
+    // Mockito para pruebas unitarias
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
+
+    // Dependencies for Mockito
+    testImplementation libs.mockito.core.v540 // Use the latest stable version
+
+    androidTestImplementation libs.androidx.fragment.testing
+
+    androidTestImplementation libs.androidx.navigation.testing.v253
+
+
+
+
+
     
 }

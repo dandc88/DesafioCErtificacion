@@ -6,13 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.desafiocertificacion.weatherapp.WeatherApp
 import com.desafiocertificacion.weatherapp.data.local.PreferencesEntity
 import com.desafiocertificacion.weatherapp.databinding.FragmentSettingsBinding
 import com.desafiocertificacion.weatherapp.viewmodel.WeatherViewModel
 import com.desafiocertificacion.weatherapp.viewmodel.WeatherViewModelFactory
+import kotlinx.coroutines.launch
 
 
 class SettingsFragment : Fragment() {
@@ -36,18 +39,20 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Cargar las preferencias actuales al abrir el fragmento
-        lifecycleScope.launchWhenStarted {
-            viewModel.preferences.collect { preferences ->
-                preferences?.let {
-                    // Actualiza los RadioButtons según las preferencias
-                    when (it.temperatureUnit) {
-                        "Celsius" -> binding.rbCelsius.isChecked = true
-                        "Fahrenheit" -> binding.rbFahrenheit.isChecked = true
-                    }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.preferences.collect { preferences ->
+                    preferences?.let {
+                        // Actualiza los RadioButtons según las preferencias
+                        when (it.temperatureUnit) {
+                            "Celsius" -> binding.rbCelsius.isChecked = true
+                            "Fahrenheit" -> binding.rbFahrenheit.isChecked = true
+                        }
 
-                    when (it.windSpeedUnit) {
-                        "m/s" -> binding.rbMps.isChecked = true
-                        "mph" -> binding.rbMph.isChecked = true
+                        when (it.windSpeedUnit) {
+                            "m/s" -> binding.rbMps.isChecked = true
+                            "mph" -> binding.rbMph.isChecked = true
+                        }
                     }
                 }
             }

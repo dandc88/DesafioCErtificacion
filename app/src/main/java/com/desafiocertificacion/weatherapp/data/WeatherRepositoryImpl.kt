@@ -4,7 +4,6 @@ import com.desafiocertificacion.weatherapp.data.local.CityDao
 import com.desafiocertificacion.weatherapp.data.local.CityEntity
 import com.desafiocertificacion.weatherapp.data.local.PreferencesDao
 import com.desafiocertificacion.weatherapp.data.local.PreferencesEntity
-import com.desafiocertificacion.weatherapp.data.remote.ApiService
 import kotlinx.coroutines.flow.Flow
 
 class WeatherRepositoryImpl(
@@ -29,4 +28,6 @@ class WeatherRepositoryImpl(
     override suspend fun insertPreferences(preferences: PreferencesEntity) {
         preferencesDao.insertPreferences(preferences)
     }
+
+
 }

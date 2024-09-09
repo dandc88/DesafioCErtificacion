@@ -16,8 +16,6 @@ import com.desafiocertificacion.weatherapp.databinding.FragmentWeatherListBindin
 import com.desafiocertificacion.weatherapp.ui.adapter.WeatherListAdapter
 import com.desafiocertificacion.weatherapp.viewmodel.WeatherViewModel
 import com.desafiocertificacion.weatherapp.viewmodel.WeatherViewModelFactory
-
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class WeatherListFragment : Fragment() {
@@ -69,7 +67,7 @@ class WeatherListFragment : Fragment() {
     // Configurar RecyclerView con el adaptador
     private fun setupRecyclerView() {
         // Pasar el listener al adaptador
-        weatherListAdapter = WeatherListAdapter { city, position ->
+        weatherListAdapter = WeatherListAdapter { _, position ->
             // Navegar al fragmento de detalles con el id de la ciudad
             val action = WeatherListFragmentDirections.actionWeatherListFragmentToWeatherDetailFragment(position)
             findNavController().navigate(action)

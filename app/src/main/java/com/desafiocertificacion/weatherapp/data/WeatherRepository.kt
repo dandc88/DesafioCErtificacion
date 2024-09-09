@@ -14,4 +14,6 @@ interface WeatherRepository {
     // Preferences-related operations
     fun getPreferences(): Flow<PreferencesEntity>
     suspend fun insertPreferences(preferences: PreferencesEntity)
+
+
 }
