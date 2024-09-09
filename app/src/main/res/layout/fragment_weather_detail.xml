@@ -7,9 +7,6 @@
     tools:context=".ui.WeatherDetailFragment">
 
     <!-- Background Image -->
-
-    <!-- Current Temperature -->
-
     <ImageView
         android:id="@+id/city_background"
         android:layout_width="0dp"
@@ -31,13 +28,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:layout_marginTop="60dp"
-        android:text="18°"
-        android:textColor="@android:color/white"
-        android:textSize="64sp"
+        android:textSize="50sp"
         app:layout_constraintEnd_toStartOf="@id/weather_icon"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="18°"
+        android:textColor="#000000"/>
 
     <ImageView
         android:id="@+id/weather_icon"
@@ -46,7 +43,6 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="70dp"
         android:contentDescription="@string/weather_icon_desc"
-
         android:src="@drawable/ic_sunny"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/current_temperature" />
@@ -81,7 +77,7 @@
                     android:layout_weight="1"
                     android:textSize="24sp"
                     android:textColor="@android:color/black"
-                    android:text="Santiago, Chile" />
+                    tools:text="Santiago, Chile" />
 
                 <ImageView
                     android:id="@+id/map_icon"
@@ -108,7 +104,7 @@
                     android:textSize="22sp"
                     android:layout_margin="16dp"
                     android:textColor="@android:color/black"
-                    android:text="Min 22°" />
+                    tools:text="Min 22°" />
 
                 <TextView
                     android:id="@+id/max_temperature"
@@ -117,48 +113,47 @@
                     android:textSize="22sp"
                     android:layout_margin="16dp"
                     android:textColor="@android:color/black"
-                    android:text="Max 32°" />
+                    tools:text="Max 32°" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-   <androidx.cardview.widget.CardView
-       android:id="@+id/card_atmosphera"
-       android:layout_width="0dp"
-       android:layout_height="wrap_content"
-       app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintTop_toBottomOf="@id/city_card"
-       android:layout_margin="30dp"
-       app:cardCornerRadius="20dp">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_atmosphera"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/city_card"
+        android:layout_margin="30dp"
+        app:cardCornerRadius="20dp">
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="horizontal"
-           android:padding="16dp"
-           android:gravity="center_vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
 
-           <TextView
-               android:id="@+id/humidity"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:textSize="16sp"
-               android:textColor="@android:color/black"
-               android:text="Humidity 64%" />
+            <TextView
+                android:id="@+id/humidity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                tools:text="Humidity 64%" />
 
-           <TextView
-               android:id="@+id/pressure"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:textSize="16sp"
-               android:textColor="@android:color/black"
-               android:text="Pressure 1015 hPa" />
-       </LinearLayout>
-
-   </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/pressure"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                tools:text="Pressure 1015 hPa" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_wind"
@@ -184,7 +179,7 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
-                android:text="Speed 3m/s" />
+                tools:text="Speed 3m/s" />
 
             <TextView
                 android:id="@+id/wind_direction"
@@ -193,15 +188,11 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
-                android:text="Direction 321° N" />
+                tools:text="Direction 321° N" />
         </LinearLayout>
-
-
-
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/card_wind"
@@ -224,7 +215,7 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
-                android:text="Sunrise 6:00 AM" />
+                tools:text="Sunrise 6:00 AM" />
 
             <TextView
                 android:id="@+id/sunset_time"
@@ -233,16 +224,11 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
-                android:text="Sunset 6:00 PM" />
+                tools:text="Sunset 6:00 PM" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 

@@ -47,8 +47,9 @@ class WeatherListFragment : Fragment() {
         setupToolbar()
         setupRecyclerView()
 
-        // Observar los datos del ViewModel
+        // Observar los datos del ViewModel y preferencias
         observeWeatherData()
+        observePreferences()
 
 
 
@@ -85,6 +86,17 @@ class WeatherListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             weatherViewModel.allCities.collect { cityList ->
                 updateRecyclerView(cityList)
+            }
+        }
+    }
+
+    // Observar las preferencias del usuario para la temperatura y la velocidad del viento
+    private fun observePreferences() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            weatherViewModel.preferences.collect { preferences ->
+                if (preferences != null) {
+                    weatherListAdapter.setPreferences(preferences)
+                }
             }
         }
     }

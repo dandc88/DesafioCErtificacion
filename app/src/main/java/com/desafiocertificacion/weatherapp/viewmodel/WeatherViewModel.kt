@@ -11,6 +11,7 @@ import com.desafiocertificacion.weatherapp.data.remote.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,22 @@ class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() 
     // Nueva función para obtener el clima detallado de una ciudad por ID
     private val _cityWeatherDetail = MutableStateFlow<CityDto?>(null)
     val cityWeatherDetail: StateFlow<CityDto?> get() = _cityWeatherDetail
+
+    fun convertTemperature(tempInCelsius: Double, unit: String): Double {
+        return if (unit == "Fahrenheit") {
+            (tempInCelsius * 9/5) + 32
+        } else {
+            tempInCelsius
+        }
+    }
+
+    fun convertWindSpeed(speedInMetersPerSecond: Double, unit: String): Double {
+        return if (unit == "mph") {
+            speedInMetersPerSecond * 2.237
+        } else {
+            speedInMetersPerSecond
+        }
+    }
 
     // Insertar las preferencias en la base de datos
     fun insertPreferences(preferences: PreferencesEntity) = viewModelScope.launch {
@@ -60,4 +77,3 @@ class WeatherViewModelFactory(private val repository: WeatherRepository) : ViewM
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-

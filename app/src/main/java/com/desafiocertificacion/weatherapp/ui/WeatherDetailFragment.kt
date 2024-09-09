@@ -1,22 +1,25 @@
 package com.desafiocertificacion.weatherapp.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.desafiocertificacion.weatherapp.R
 import com.desafiocertificacion.weatherapp.WeatherApp
+import com.desafiocertificacion.weatherapp.data.local.PreferencesEntity
 import com.desafiocertificacion.weatherapp.data.remote.CityDto
 import com.desafiocertificacion.weatherapp.databinding.FragmentWeatherDetailBinding
 import com.desafiocertificacion.weatherapp.viewmodel.WeatherViewModel
 import com.desafiocertificacion.weatherapp.viewmodel.WeatherViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -32,6 +35,8 @@ class WeatherDetailFragment : Fragment() {
     }
     private val args: WeatherDetailFragmentArgs by navArgs()
 
+    private var isDataLoaded = false // Bandera para cargar los datos solo una vez
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,40 +44,89 @@ class WeatherDetailFragment : Fragment() {
         binding = FragmentWeatherDetailBinding.inflate(inflater, container, false)
 
         val cityId = args.cityId
-        Log.d("WeatherDetailFragment", "City ID: $cityId") // Log para verificar el ID
 
-        viewModel.fetchWeatherDetail(cityId)
 
+        if (!isDataLoaded) {
+            // Obtener detalles del clima de la ciudad solo si no se ha cargado antes
+            viewModel.fetchWeatherDetail(cityId)
+            isDataLoaded = true // Marcar como cargado
+        }
+
+
+
+        // Observar tanto las preferencias como los detalles del clima
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.cityWeatherDetail.collect { cityDetail ->
-                if (cityDetail != null) {
-                    Log.d("WeatherDetailFragment", "CityDetail: $cityDetail") // Log para verificar los detalles
-                    updateUI(cityDetail)
-                }else{
-                    Log.d("WeatherDetailFragment", "CityDetail is null")
-                }
-            }
+            launch { observePreferences() }
+            launch { observeCityWeatherDetails() }
         }
 
         return binding.root
     }
 
-    private fun updateUI(cityDetail: CityDto) {
-        Log.d("WeatherDetailFragment", "Updating UI with CityDetail: $cityDetail")
-        binding.cityName.text = cityDetail.name
-        binding.currentTemperature.text = "${cityDetail.main.temp}°"
-        binding.weatherIcon.setImageResource(getWeatherIcon(cityDetail.weather[0].icon))
-        binding.minTemperature.text = "Min ${cityDetail.main.temp_min}°"
-        binding.maxTemperature.text = "Max ${cityDetail.main.temp_max}°"
-        binding.humidity.text = "Humidity ${cityDetail.main.humidity}%"
-        binding.pressure.text = "Pressure ${cityDetail.main.pressure} hPa"
-        binding.windSpeed.text = "Speed ${cityDetail.wind.speed} m/s"
-        binding.windDirection.text = "Direction ${getWindDirection(cityDetail.wind.deg)}"  // Cambio aquí
-        binding.sunriseTime.text = "Sunrise ${convertTime(cityDetail.sys.sunrise, cityDetail.timezone)}"
-        binding.sunsetTime.text = "Sunset ${convertTime(cityDetail.sys.sunset, cityDetail.timezone)}"
-        updateBackground(cityDetail.name)
+    // Recolecta las preferencias del usuario
+    private suspend fun observePreferences() {
+        viewModel.preferences.collectLatest { preferences ->
+            preferences?.let {
+
+            }
+        }
     }
 
+    // Recolecta los detalles del clima de la ciudad
+    private suspend fun observeCityWeatherDetails() {
+        viewModel.cityWeatherDetail.collectLatest { cityDetail ->
+            cityDetail?.let {
+
+                viewModel.preferences.value?.let { preferences ->
+                    updateUI(cityDetail, preferences)
+                    setupMapClickListener(cityDetail)
+                }
+            } ?: Log.d("WeatherDetailFragment", "CityDetail is null")
+        }
+    }
+
+    private fun setupMapClickListener(cityDetail: CityDto) {
+        binding.mapIcon.setOnClickListener {
+            // Crear la URI utilizando el esquema geo: con coordenadas
+            val gmmIntentUri = Uri.parse("geo:${cityDetail.coord.lat},${cityDetail.coord.lon}?q=${cityDetail.name}")
+
+            // Crear el Intent para abrir la URI en una aplicación de mapas
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+
+            // Lanzar el Intent directamente
+            startActivity(mapIntent)
+        }
+    }
+
+
+
+
+
+    // Actualiza la UI con los detalles del clima y las preferencias del usuario
+    private fun updateUI(cityDetail: CityDto, preferences: PreferencesEntity) {
+        val temperatureUnitSymbol = when (preferences.temperatureUnit) {
+            "Celsius" -> "C"
+            "Fahrenheit" -> "F"
+            else -> "C"
+        }
+
+        val temperature = viewModel.convertTemperature(cityDetail.main.temp, preferences.temperatureUnit)
+        val windSpeed = viewModel.convertWindSpeed(cityDetail.wind.speed, preferences.windSpeedUnit)
+
+        binding.cityName.text = cityDetail.name
+        binding.currentTemperature.text = getString(R.string.temperature, temperature, temperatureUnitSymbol)
+        binding.weatherIcon.setImageResource(getWeatherIcon(cityDetail.weather[0].icon))
+        binding.minTemperature.text = getString(R.string.min_temperature, viewModel.convertTemperature(cityDetail.main.temp_min, preferences.temperatureUnit))
+        binding.maxTemperature.text = getString(R.string.max_temperature, viewModel.convertTemperature(cityDetail.main.temp_max, preferences.temperatureUnit))
+        binding.humidity.text = getString(R.string.humidity, cityDetail.main.humidity)
+        binding.pressure.text = getString(R.string.pressure, cityDetail.main.pressure)
+        binding.windSpeed.text = getString(R.string.wind_speed, windSpeed, preferences.windSpeedUnit)
+        binding.windDirection.text = getString(R.string.wind_direction, getWindDirection(cityDetail.wind.deg))
+        binding.sunriseTime.text = getString(R.string.sunrise, convertTime(cityDetail.sys.sunrise, cityDetail.timezone))
+        binding.sunsetTime.text = getString(R.string.sunset, convertTime(cityDetail.sys.sunset, cityDetail.timezone))
+
+        updateBackground(cityDetail.name)
+    }
 
     private fun getWeatherIcon(iconCode: String): Int {
         return when (iconCode) {
@@ -82,6 +136,7 @@ class WeatherDetailFragment : Fragment() {
             else -> R.drawable.ic_sunny
         }
     }
+
     private fun getWindDirection(degrees: Double): String {
         return when {
             degrees < 22.5 || degrees >= 337.5 -> "N"
@@ -102,20 +157,22 @@ class WeatherDetailFragment : Fragment() {
         sdf.timeZone = timeZone
         return sdf.format(date)
     }
+
     private fun updateBackground(cityName: String) {
         val backgroundResId = when (cityName) {
             "Santiago" -> R.drawable.santiago_de_chile
             "Thimphu" -> R.drawable.thimphu_bhutan
             "Reykjavik" -> R.drawable.reykjavik_iceland
-            else -> null // No se asigna ninguna imagen
+            else -> null
         }
 
         if (backgroundResId != null) {
             binding.cityBackground.setImageResource(backgroundResId)
         } else {
-            binding.cityBackground.setImageDrawable(null) // Limpia cualquier imagen establecida
-            binding.cityBackground.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white)) // Establece el color blanco
+            binding.cityBackground.setImageDrawable(null)
+            binding.cityBackground.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         }
     }
 }
+
 

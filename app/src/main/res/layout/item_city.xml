@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -10,7 +11,7 @@
         android:id="@+id/tv_country"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chile"
+        tools:text="Chile"
         android:textSize="14sp"
         android:textColor="@color/design_default_color_primary" />
 
@@ -28,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Santiago"
+            tools:text="Santiago"
             android:textSize="24sp"
             android:textColor="@color/design_default_color_primary_dark"
             android:layout_marginEnd="8dp" />
@@ -38,7 +39,7 @@
             android:id="@+id/tv_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="18°"
+            tools:text="18°"
             android:textSize="24sp"
             android:textColor="@android:color/black"
             android:layout_gravity="center_vertical"
@@ -59,7 +60,7 @@
         android:id="@+id/tv_weather_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Light rain"
+        tools:text="Light rain"
         android:textSize="16sp"
         android:textColor="@color/design_default_color_primary"
         android:layout_marginTop="4dp" />
